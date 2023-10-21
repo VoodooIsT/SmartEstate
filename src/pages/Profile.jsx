@@ -60,20 +60,23 @@ export default function Profile() {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, avatar: downloadURL })
+          setFormData({ ...formData, profilePicture: downloadURL })
         );
       }
     );
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    })
+  } ;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(updateUserStart());
+      dispatch(updateUserStart()); 
       const res = await fetch(`/api/v1/update/${currentUser._id}`, {
         method: 'POST',
         headers: {
@@ -85,7 +88,7 @@ export default function Profile() {
       if (data.success === false) {
         dispatch(updateUserFailure(data.message));
         return;
-      }
+      } 
 
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
@@ -122,7 +125,7 @@ export default function Profile() {
       }
       dispatch(deleteUserSuccess(data));
     } catch (error) {
-      dispatch(deleteUserFailure(data.message));
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
