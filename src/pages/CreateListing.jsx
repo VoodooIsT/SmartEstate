@@ -10,12 +10,14 @@ const CreateListing = () => {
   const[formData, setFormData] = useState({
     imageUrls:  [],
 
-  })
+  });
+
+  const[imageUploadError, setImageUploadError] = useState(false);
 
   console.log(formData);
 
   const handleImageSubit = (e) => {
-    if(file.length > 0 && file.length < 7) {
+    if(file.length > 0 && file.length + formData.imageUrls.length < 7) {
       const promises = [];
       
       for(let i = 0; i < file.length; i++) {
@@ -23,8 +25,16 @@ const CreateListing = () => {
 
       }
       Promise.all(promises).then((urls) => {
-        setFormData({...formData, imageUrls: formData.imageUrls.concat(urls)})
-      })
+        setFormData({...formData, imageUrls: formData.imageUrls.concat(urls),
+        });
+        setImageUploadError(false)
+      }).catch((err) => {
+        setImageUploadError("Image Upload Failed (not greater then 2 mb)");
+      });
+
+      
+    } else{
+      setImageUploadError('You can only upload 6 images per listing')
     }
 
   };
@@ -55,6 +65,13 @@ const CreateListing = () => {
     })
   }
 
+  const handleRemoveImage = (index) => {
+    setFormData({
+      ...formData,
+      imageUrls: formData.imageUrls.filter((_, i) => i!==index),
+      
+    })
+  }
 
   return (
     <main className="p-3 max-w-4xl mx-auto">
@@ -130,6 +147,19 @@ const CreateListing = () => {
             <input onChange={(e)=>setFile(e.target.files)} type="file" id="images" accept="image/*" multiple  className="p-3 border border-gray-300 rounded w-full"/>
             <button type="button" onClick={handleImageSubit} className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80">Upload</button>
           </div>
+          <p className="text-red-700 text-sm">
+          {
+            imageUploadError && imageUploadError
+          }
+        </p>
+        {
+          formData.imageUrls.length > 0 && formData.imageUrls.map((url, index) => (
+            <div key={index} className="flex justify-between items-center">
+              <img src={url} className="w-20 h-20 object-cover rounded-lg" />
+              <button onClick={() => handleRemoveImage(index)} className="text-sm text-red-700 font-semibold">Delete</button>
+            </div>
+          ))
+        }
           <button className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80">Create Listing</button>
         </div>
 
