@@ -13,11 +13,14 @@ const CreateListing = () => {
   });
 
   const[imageUploadError, setImageUploadError] = useState(false);
+  const[uploading, setUploading] = useState(false);
 
   console.log(formData);
 
   const handleImageSubit = (e) => {
     if(file.length > 0 && file.length + formData.imageUrls.length < 7) {
+      setUploading(true);
+      setImageUploadError(false);
       const promises = [];
       
       for(let i = 0; i < file.length; i++) {
@@ -27,14 +30,16 @@ const CreateListing = () => {
       Promise.all(promises).then((urls) => {
         setFormData({...formData, imageUrls: formData.imageUrls.concat(urls),
         });
-        setImageUploadError(false)
+        setImageUploadError(false);
+        setUploading(false);
       }).catch((err) => {
-        setImageUploadError("Image Upload Failed (not greater then 2 mb)");
+        setImageUploadError("Image Upload Failed (not greater then 2 mb)")
       });
 
       
     } else{
-      setImageUploadError('You can only upload 6 images per listing')
+      setImageUploadError('You can only upload 6 images per listing');
+      setUploading(false);
     }
 
   };
@@ -145,7 +150,9 @@ const CreateListing = () => {
 
           <div className="flex gap-4">
             <input onChange={(e)=>setFile(e.target.files)} type="file" id="images" accept="image/*" multiple  className="p-3 border border-gray-300 rounded w-full"/>
-            <button type="button" onClick={handleImageSubit} className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80">Upload</button>
+            <button disabled={uploading} type="button" onClick={handleImageSubit} className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80">{
+              uploading ? 'Uploading...': 'Upload'
+            }</button>
           </div>
           <p className="text-red-700 text-sm">
           {
