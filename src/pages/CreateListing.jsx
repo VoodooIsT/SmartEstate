@@ -9,6 +9,22 @@ const CreateListing = () => {
   const [file, setFile] = useState([]);
   const[formData, setFormData] = useState({
     imageUrls:  [],
+    name:"",
+    description:"",
+    address: "",
+    regularPrice: 0,
+    discountPrice: 0,
+    bathrooms: 1,
+    bedrooms: 1,
+    furnished: "",
+    parking: "",
+    type: "rent",
+    offer: false,
+    paeking: false,
+    furnished: false
+
+    
+
 
   });
 
@@ -78,50 +94,56 @@ const CreateListing = () => {
     })
   }
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]:e.target.value
+    })
+  };
   return (
     <main className="p-3 max-w-4xl mx-auto">
         <h1 className='text-3xl font-semibold text-center my-7'>Create a Listing</h1>
         <form action="" className='flex flex-col sm:flex-row gap-4'>
           <div className="flex flex-col gap-4 flex-1">
-            <input type="text" placeholder='Name' className='border p-3 rounded-lg' id="name" maxLength='62' minLength= '10' required />
-            <textarea type="text" placeholder='Description' className='border p-3 rounded-lg' id="name" maxLength='62' minLength= '10' required />
-            <input type="text" placeholder='Address' className='border p-3 rounded-lg' id="address"  required />
+            <input onChange={handleChange} value={formData.name} type="text" placeholder='Name' className='border p-3 rounded-lg' id="name" maxLength='62' minLength= '10' required />
+            <textarea onChange={handleChange} value={formData.description} type="text" placeholder='Description' className='border p-3 rounded-lg' id="name" maxLength='62' minLength= '10' required />
+            <input onChange={handleChange} value={formData.address} type="text" placeholder='Address' className='border p-3 rounded-lg' id="address"  required />
 
             <div className="flex gap-6 flex-wrap">
             <div className="flex gap-2">
-              <input type="checkbox"  id="sale" className="w-5" />
+              <input onChange={handleChange} checked={formData.type === 'sale'} type="checkbox"  id="sale" className="w-5" />
               <span>Sell</span>
             </div>
 
             <div className="flex gap-2">
-              <input type="checkbox"  id="rent" className="w-5" />
+              <input onChange={handleChange} checked={formData.type === 'rent'} type="checkbox"  id="rent" className="w-5" />
               <span>Rent</span>
             </div>
 
             <div className="flex gap-2">
-              <input type="checkbox"  id="parking" className="w-5" />
+              <input onChange={handleChange} checked={formData.parking} type="checkbox"  id="parking" className="w-5" />
               <span>Parking Spot</span>
             </div>
 
             <div className="flex gap-2">
-              <input type="checkbox"  id="furnished" className="w-5" />
+              <input onChange={handleChange} checked={formData.furnished}  type="checkbox"  id="furnished" className="w-5" />
               <span>Furnished</span>
             </div>
 
             <div className="flex gap-2">
-              <input type="checkbox"  id="offer" className="w-5" />
+              <input onChange={handleChange} checked={formData.offer} type="checkbox"  id="offer" className="w-5" />
               <span>Offer</span>
             </div>
           </div>
 
           <div className="flex flex-wrap gap-6">
             <div className="flex items-center gap-2">
-              <input type="number" name="" id="bedrooms" min='1' max='10' required className="p-3  border border-gray-300 rounded-lg"/>
+              <input onChange={handleChange} value={formData.bedrooms} type="number" name="" id="bedrooms" min='1' max='10' required className="p-3  border border-gray-300 rounded-lg"/>
               <p>Bedrooms</p>
             </div>
 
             <div className="flex items-center gap-2">
-              <input type="number" name="" id="bathrooms" min='1' max='10' required className="p-3  border border-gray-300 rounded-lg"/>
+              <input onChange={handleChange} value={formData.bathrooms} type="number" name="" id="bathrooms" min='1' max='10' required className="p-3  border border-gray-300 rounded-lg"/>
               <p>Bathrooms</p>
             </div>
 
