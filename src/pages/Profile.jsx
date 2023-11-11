@@ -56,27 +56,24 @@ export default function Profile() {
         setFilePerc(Math.round(progress));
       },
       (error) => {
-        setFileUploadError(error);
+        setFileUploadError(error.message);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, profilePicture: downloadURL })
+          setFormData({ ...formData, profilePicture : downloadURL })
         );
       }
     );
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value
-    })
-  } ;
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(updateUserStart()); 
+      dispatch(updateUserStart());
       const res = await fetch(`/api/v1/update/${currentUser._id}`, {
         method: 'POST',
         headers: {
@@ -88,7 +85,7 @@ export default function Profile() {
       if (data.success === false) {
         dispatch(updateUserFailure(data.message));
         return;
-      } 
+      }
 
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
@@ -132,7 +129,7 @@ export default function Profile() {
   const handleShowListings = async () => {
     try {
       setShowListingsError(false);
-      const res = await fetch(`/api/v1/listing/listings/${currentUser._id}`);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
       const data = await res.json();
       if (data.success === false) {
         setShowListingsError(true);
@@ -147,7 +144,7 @@ export default function Profile() {
 
   const handleListingDelete = async (listingId) => {
     try {
-      const res = await fetch(`/api/v1/delete/${listingId}`, {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
         method: 'DELETE',
       });
       const data = await res.json();
@@ -197,7 +194,7 @@ export default function Profile() {
           type='text'
           placeholder='username'
           defaultValue={currentUser.userName}
-          id='username'
+          id='userName'
           className='border p-3 rounded-lg'
           onChange={handleChange}
         />
